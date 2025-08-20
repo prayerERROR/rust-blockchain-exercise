@@ -4,7 +4,7 @@ use serde::{Serialize, Deserialize};
 use super::transaction::Transaction;
 use super::coder;
 
-#[derive(Serialize, Deserialize, PartialEq, Eq, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct BlockHeader {
     pub time: i64,
     pub nonce: u32,
@@ -12,7 +12,7 @@ pub struct BlockHeader {
     pub pre_hash: String,
 }
 
-#[derive(Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Block {
     pub header: BlockHeader,
     pub hash: String,

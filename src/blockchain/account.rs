@@ -1,6 +1,8 @@
+use serde::{Serialize, Deserialize};
+
 use std::collections::HashMap;
 
-#[derive(Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Account {
     address: String,
     balance: f64,
@@ -17,7 +19,7 @@ impl Account {
     }
 }
 
-#[derive(Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct AccountState {
     accounts: HashMap<String, Account>,
 }
