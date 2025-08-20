@@ -1,6 +1,7 @@
 use chrono::Utc;
 use serde::{Serialize, Deserialize};
 
+use super::transaction::Transaction;
 use super::coder;
 
 #[derive(Serialize, Deserialize, PartialEq, Eq, Debug)]
@@ -15,12 +16,12 @@ pub struct BlockHeader {
 pub struct Block {
     pub header: BlockHeader,
     pub hash: String,
-    pub data: String,
+    pub transaction: Transaction,
 }
 
 impl Block {
-    pub fn new_block(data: String, pre_hash: String) -> Block {
-        let serialized_tx = coder::my_serialize(&data);
+    pub fn new_block(transaction: Transaction, pre_hash: String) -> Block {
+        let serialized_tx = coder::my_serialize(&transaction);
         let tx_hash = coder::get_hash(&serialized_tx.as_slice());
         let time = Utc::now().timestamp();
         let header = BlockHeader {
@@ -34,7 +35,7 @@ impl Block {
         Block {
             header: header,
             hash: hash,
-            data: data,
+            transaction: transaction,
         }      
     }
 
@@ -47,13 +48,20 @@ impl Block {
                 break;
             } else {
                 self.header.nonce += 1;
-                let serialized_header = coder::my_serialize(&self.header);
-                self.hash = coder::get_hash(&serialized_header.as_slice());
+                self.hash = self.calculate_hash();
             }
         }
     }
 
-    pub fn get_hash(&self) -> String {
-        self.hash.clone()
+    pub fn calculate_hash(&self) -> String {
+        let serialized_header = coder::my_serialize(&self.header);
+        coder::get_hash(&serialized_header.as_slice())
     }
+
+    pub fn is_valid(&self, difficulty: usize) -> bool {
+        let target = "0".repeat(difficulty);
+        let valid_hash = self.calculate_hash();
+        self.hash.starts_with(target.as_str()) && self.hash == valid_hash
+    }
+
 }
