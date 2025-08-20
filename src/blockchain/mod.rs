@@ -1,5 +1,7 @@
+mod account;
 mod block;
 mod coder;
+mod transaction;
 
 pub struct BlockChain {
     pub blocks: Vec<block::Block>,
@@ -22,5 +24,4 @@ impl BlockChain {
         let new_block = block::Block::new_block(data, pre_hash);
         self.blocks.push(new_block);
     }
-
 }
