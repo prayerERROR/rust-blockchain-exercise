@@ -1,2 +1,2 @@
-mod hasher;
+mod hash;
 mod merkle;
