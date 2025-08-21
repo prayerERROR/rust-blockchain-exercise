@@ -2,7 +2,7 @@ use serde::{Serialize, Deserialize};
 
 use std::collections::HashMap;
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Account {
     address: String,
     balance: f64,
@@ -56,7 +56,14 @@ impl AccountState {
     }
 
     pub fn update_balance(&mut self, address: &str, new_balance: f64) {
-        self.accounts.insert(address.to_string(), new_balance);
+        match self.accounts.get_mut(address) {
+            Some(account) => account.balance = new_balance,
+            None => {
+                let mut account = Account::new(address.to_string());
+                account.balance = new_balance;
+                self.accounts.insert(address.to_string(), account);
+            },
+        }
     }
 
 }
