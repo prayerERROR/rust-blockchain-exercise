@@ -55,13 +55,8 @@ impl AccountState {
         }
     }
 
-    pub fn update_balance(&mut self, address: &str, new_balance: f64) -> Result<(), ()> {
-        if let Some(account) = self.accounts.get_mut(address) {
-            account.balance = new_balance;
-            Ok(())
-        } else {
-            Err(())
-        }
+    pub fn update_balance(&mut self, address: &str, new_balance: f64) {
+        self.accounts.insert(address.to_string(), new_balance);
     }
 
 }

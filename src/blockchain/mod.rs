@@ -8,7 +8,6 @@ mod transaction;
 use std::io::{self, Read, Write};
 use std::fs::File;
 
-use crate::blockchain::coder::my_deserialize;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct BlockChain {
@@ -35,10 +34,39 @@ impl BlockChain {
         }
     }
 
-    pub fn add_block(&mut self, transaction: transaction::Transaction) {
+    pub fn process_transaction(&mut self, tx: transaction::Transaction) -> Result<(), String> {
+        if !tx.is_coinbase() {
+            let sender_balance = self.account_state.get_balance(&tx.sender);
+            let receiver_balance = self.account_state.get_balance(&tx.receiver);
+            let sender_nonce = self.account_state.get_nonce(&tx.sender);
+            let cost = tx.calculate_cost();
+
+            // Verify sender nonce and balance
+            if sender_balance < cost {
+                return Err(String::from("Insufficient balance for sender."));
+            }
+            if tx.nonce != sender_nonce + 1 {
+                return Err(String::from("Wrong nonce."));
+            }
+
+            // Update sender and receiver balance
+            let new_sender_balance = sender_balance - cost;
+            let new_receiver_balance = receiver_balance + tx.amount;
+            self.account_state.update_balance(&tx.sender, new_sender_balance);
+            self.account_state.update_balance(&tx.receiver, new_receiver_balance);
+        } else {
+            // If sender is system, update receiver balance directly
+            let new_receiver_balance = self.account_state.get_balance(&tx.receiver) + tx.amount;
+            self.account_state.update_balance(&tx.receiver, new_receiver_balance);
+        }
+
+        Ok(())
+    }
+
+    pub fn add_block(&mut self, tx: transaction::Transaction) {
         let last_block = self.blocks.last().unwrap();
         let pre_hash = last_block.calculate_hash();
-        let new_block = block::Block::new_block(transaction, pre_hash);
+        let new_block = block::Block::new_block(tx, pre_hash);
         self.blocks.push(new_block);
     }
 
@@ -53,7 +81,7 @@ impl BlockChain {
         let mut file = File::open(file_name)?;
         let mut buffer = Vec::new();
         file.read_to_end(&mut buffer)?;
-        let blockchain = my_deserialize(&buffer);
+        let blockchain = coder::my_deserialize(&buffer);
         Ok(blockchain)
     }
 }
