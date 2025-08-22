@@ -1,6 +1,8 @@
 #[derive(Debug)]
 pub enum BlockchainError {
+    DuplicatedAccount(String),
     InsufficientBalance(String),
+    InvalidAccount(String),
     InvalidBlock(String),
     InvalidNonce(String),
     SerializationError(String),
@@ -10,8 +12,12 @@ pub enum BlockchainError {
 impl std::fmt::Display for BlockchainError {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
+            BlockchainError::DuplicatedAccount(msg)
+                => write!(f, "Duplicated account: {}", msg),
             BlockchainError::InsufficientBalance(msg)
                 => write!(f, "Insufficient balance: {}", msg),
+            BlockchainError::InvalidAccount(msg)
+                => write!(f, "Invalid account: {}", msg),
             BlockchainError::InvalidBlock(msg)
                 => write!(f, "Invalid block: {}", msg),
             BlockchainError::InvalidNonce(msg)

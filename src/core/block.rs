@@ -120,4 +120,8 @@ impl Block {
         Ok(())
     }
 
+    pub fn get_height(&self) -> u64 {
+        self.header.height
+    }
+
 }

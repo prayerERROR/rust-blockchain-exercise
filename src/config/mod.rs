@@ -1,3 +1,6 @@
+use serde::{Deserialize, Serialize};
+
+#[derive(Serialize, Deserialize, Debug)]
 pub struct BlockchainConfig {
     pub block_reward: f64,
     pub block_max_tx: u32,

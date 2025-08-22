@@ -1,2 +1,2 @@
-mod chain_store;
-mod state_store;
+pub mod chain_store;
+pub mod state_store;
