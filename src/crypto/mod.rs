@@ -1,2 +1,2 @@
-mod hash;
-mod merkle;
+pub mod hash;
+pub mod merkle;

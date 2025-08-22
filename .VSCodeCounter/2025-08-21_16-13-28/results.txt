@@ -1,0 +1,64 @@
+Date : 2025-08-21 16:13:28
+Directory : d:\programs\rust\rust-blockchain-exercise
+Total : 27 files,  373 codes, 19 comments, 64 blanks, all 456 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| Rust     |         27 |        373 |         19 |         64 |        456 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++-----------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                  | files      | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                     |         27 |        373 |         19 |         64 |        456 |
+| src                                                                   |         27 |        373 |         19 |         64 |        456 |
+| src (Files)                                                           |          1 |         14 |          0 |          2 |         16 |
+| src\account                                                           |          3 |          2 |          2 |          0 |          4 |
+| src\config                                                            |          1 |         18 |          0 |          1 |         19 |
+| src\consensus                                                         |          3 |          2 |          2 |          0 |          4 |
+| src\core                                                              |          4 |        250 |          6 |         45 |        301 |
+| src\crypto                                                            |          3 |         46 |          3 |         12 |         61 |
+| src\error                                                             |          1 |         25 |          0 |          2 |         27 |
+| src\mempool                                                           |          2 |          1 |          1 |          0 |          2 |
+| src\network                                                           |          1 |          0 |          1 |          0 |          1 |
+| src\storage                                                           |          3 |          2 |          2 |          0 |          4 |
+| src\utils                                                             |          2 |         11 |          0 |          2 |         13 |
+| src\wallet                                                            |          3 |          2 |          2 |          0 |          4 |
++-----------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-----------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                              | language | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| d:\programs\rust\rust-blockchain-exercise\src\account\balance.rs      | Rust     |          0 |          1 |          0 |          1 |
+| d:\programs\rust\rust-blockchain-exercise\src\account\mod.rs          | Rust     |          2 |          0 |          0 |          2 |
+| d:\programs\rust\rust-blockchain-exercise\src\account\state.rs        | Rust     |          0 |          1 |          0 |          1 |
+| d:\programs\rust\rust-blockchain-exercise\src\config\mod.rs           | Rust     |         18 |          0 |          1 |         19 |
+| d:\programs\rust\rust-blockchain-exercise\src\consensus\difficulty.rs | Rust     |          0 |          1 |          0 |          1 |
+| d:\programs\rust\rust-blockchain-exercise\src\consensus\mod.rs        | Rust     |          2 |          0 |          0 |          2 |
+| d:\programs\rust\rust-blockchain-exercise\src\consensus\pow.rs        | Rust     |          0 |          1 |          0 |          1 |
+| d:\programs\rust\rust-blockchain-exercise\src\core\account.rs         | Rust     |         59 |          0 |         10 |         69 |
+| d:\programs\rust\rust-blockchain-exercise\src\core\block.rs           | Rust     |         57 |          1 |          9 |         67 |
+| d:\programs\rust\rust-blockchain-exercise\src\core\mod.rs             | Rust     |         68 |          5 |         15 |         88 |
+| d:\programs\rust\rust-blockchain-exercise\src\core\transaction.rs     | Rust     |         66 |          0 |         11 |         77 |
+| d:\programs\rust\rust-blockchain-exercise\src\crypto\hash.rs          | Rust     |          6 |          0 |          2 |          8 |
+| d:\programs\rust\rust-blockchain-exercise\src\crypto\merkle.rs        | Rust     |         38 |          3 |         10 |         51 |
+| d:\programs\rust\rust-blockchain-exercise\src\crypto\mod.rs           | Rust     |          2 |          0 |          0 |          2 |
+| d:\programs\rust\rust-blockchain-exercise\src\error\mod.rs            | Rust     |         25 |          0 |          2 |         27 |
+| d:\programs\rust\rust-blockchain-exercise\src\main.rs                 | Rust     |         14 |          0 |          2 |         16 |
+| d:\programs\rust\rust-blockchain-exercise\src\mempool\mod.rs          | Rust     |          1 |          0 |          0 |          1 |
+| d:\programs\rust\rust-blockchain-exercise\src\mempool\pool.rs         | Rust     |          0 |          1 |          0 |          1 |
+| d:\programs\rust\rust-blockchain-exercise\src\network\mod.rs          | Rust     |          0 |          1 |          0 |          1 |
+| d:\programs\rust\rust-blockchain-exercise\src\storage\chain_store.rs  | Rust     |          0 |          1 |          0 |          1 |
+| d:\programs\rust\rust-blockchain-exercise\src\storage\mod.rs          | Rust     |          2 |          0 |          0 |          2 |
+| d:\programs\rust\rust-blockchain-exercise\src\storage\state_store.rs  | Rust     |          0 |          1 |          0 |          1 |
+| d:\programs\rust\rust-blockchain-exercise\src\utils\mod.rs            | Rust     |          1 |          0 |          0 |          1 |
+| d:\programs\rust\rust-blockchain-exercise\src\utils\serialize.rs      | Rust     |         10 |          0 |          2 |         12 |
+| d:\programs\rust\rust-blockchain-exercise\src\wallet\keypair.rs       | Rust     |          0 |          1 |          0 |          1 |
+| d:\programs\rust\rust-blockchain-exercise\src\wallet\mod.rs           | Rust     |          2 |          0 |          0 |          2 |
+| d:\programs\rust\rust-blockchain-exercise\src\wallet\signer.rs        | Rust     |          0 |          1 |          0 |          1 |
+| Total                                                                 |          |        373 |         19 |         64 |        456 |
++-----------------------------------------------------------------------+----------+------------+------------+------------+------------+
