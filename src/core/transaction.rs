@@ -3,7 +3,7 @@ use serde::{Serialize, Deserialize};
 
 use crate::error::BlockchainError;
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct Transaction {
     pub sender: String,
     pub receiver: String,

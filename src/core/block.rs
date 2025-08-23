@@ -8,7 +8,7 @@ use super::transaction::Transaction;
 use crate::utils::serialization::serialize;
 
 // Block header
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct BlockHeader {
     pub height: u64,
     pub timestamp: i64,
@@ -26,7 +26,7 @@ impl BlockHeader {
 }
 
 // Block
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Block {
     pub header: BlockHeader,
     pub hash: String,
