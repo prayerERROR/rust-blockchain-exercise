@@ -27,7 +27,7 @@ impl BlockChain {
             Vec::new(),
             "0".repeat(64),
             0,
-            difficulty,
+            difficulty
         )?;
 
         // Initialize block index
@@ -43,48 +43,45 @@ impl BlockChain {
         })
     }
 
-    pub fn add_block(&mut self) {
-        unimplemented!()
+    pub fn create_block(&mut self, txs: Vec<Transaction>, miner_address: &str) -> Result<Block, BlockchainError> {
+        let pre_block = self.get_last_block().unwrap();
+        let pre_hash = pre_block.hash.clone();
+        let height = 1 + pre_block.get_height();
+        
+        // A vector contains a transaction which is reward for miner
+        let mut transactions = vec![
+            Transaction::coinbase(miner_address, self.config.block_reward)
+        ];
+
+        transactions.extend(txs);
+        Block::new(
+            transactions,
+            pre_hash,
+            height,
+            self.current_difficulty,
+        )
     }
 
     pub fn validate_transaction(&mut self, tx: &Transaction) -> Result<(), BlockchainError> {
-        tx.validate_basic()?;
-        if !tx.is_coinbase() {
+        if tx.is_coinbase() {
+            tx.validate_basic()?;
+        } else {
             let sender_balance = self.account_state.get_balance(&tx.sender);
-            let sender_nonce = self.account_state.get_nonce(&tx.sender);
-            
-            if sender_balance < tx.calculate_cost() {
-                return Err(BlockchainError::InsufficientBalance(
-                    format!("{} does not have enough balance.", &tx.sender)
-                ))
-            }
-
-            if tx.nonce != sender_nonce + 1 {
-                return Err(BlockchainError::InvalidNonce(
-                    format!("Invalid nonce for {}", &tx.sender)
-                ))
-            }
+            let expected_nonce = 1 + self.account_state.get_nonce(&tx.sender);
+            tx.validate_with_state(sender_balance, expected_nonce+1)?;
         }
 
         Ok(())
     }
 
     pub fn process_transaction(&mut self, tx: &Transaction) -> Result<(), BlockchainError> {
-        if !tx.is_coinbase() {
-            let sender_balance = self.account_state.get_balance(&tx.sender);
-            let receiver_balance = self.account_state.get_balance(&tx.receiver);
-            let cost = tx.calculate_cost();
-
-            // Update sender and receiver balance
-            let new_sender_balance = sender_balance - cost;
-            let new_receiver_balance = receiver_balance + tx.amount;
-            self.account_state.update_balance(&tx.sender, new_sender_balance)?;
-            self.account_state.update_balance(&tx.receiver, new_receiver_balance)?;
-            self.account_state.increase_nonce(&tx.sender)?;
+        if tx.is_coinbase() {
+            self.account_state.credit(&tx.receiver, tx.amount)?;
         } else {
-            // If sender is system, update receiver balance directly
-            let new_receiver_balance = self.account_state.get_balance(&tx.receiver) + tx.amount;
-            self.account_state.update_balance(&tx.receiver, new_receiver_balance)?;
+            let cost = tx.calculate_cost();
+            self.account_state.credit(&tx.receiver, tx.amount)?;
+            self.account_state.debit(&tx.sender, cost)?;
+            self.account_state.increase_nonce(&tx.sender)?;
         }
 
         Ok(())
@@ -94,6 +91,7 @@ impl BlockChain {
         let current_height = self.blocks.len() as u32;
         if current_height % self.config.diffuclty_interval == 0 {
             self.current_difficulty += 1;
+            println!("Difficulty adjusted to: {}.", self.current_difficulty);
         }
     }
 
@@ -104,11 +102,31 @@ impl BlockChain {
         }
     }
 
+    pub fn get_last_block(&self) -> Option<&Block> {
+        self.blocks.last()
+    }
+
     pub fn get_block_by_hash(&self, hash: &str) -> Option<&Block> {
         match self.block_index.get(hash) {
             Some(&index) => Some(&self.blocks[index]),
             None => None,
         }
+    }
+
+    pub fn get_block_by_height(&self, height: u64) -> Option<&Block> {
+        self.blocks.get(height as usize)
+    }
+
+    pub fn get_account_balance(&self, address: &str) -> f64 {
+        self.account_state.get_balance(address)
+    }
+
+    pub fn get_account_nonce(&self, address: &str) -> u64 {
+        self.account_state.get_nonce(&address)
+    }
+
+    pub fn create_account(&mut self, address: &str) -> Result<(), BlockchainError> {
+        self.account_state.create_account(address)
     }
     
 }

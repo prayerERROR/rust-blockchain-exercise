@@ -36,7 +36,7 @@ impl Account {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct AccountState {
     accounts: HashMap<String, Account>,
-    total_supply: f64, // why we need this?
+    total_supply: f64,
 }
 
 impl AccountState {
@@ -50,7 +50,7 @@ impl AccountState {
     pub fn create_account(&mut self, address: &str) -> Result<(), BlockchainError> {
         match self.exist_account(address) {
             true => Err(BlockchainError::DuplicatedAccount(
-                "Block hash doesn't match requirement.".to_string()
+                format!("Account {} already exists.", address)
             )),
             false => {
                 let new_account = Account::new(address.to_string());
@@ -90,10 +90,11 @@ impl AccountState {
         match self.accounts.get_mut(address) {
             Some(account) => {
                 account.nonce += 1;
+                account.update_activity();
                 Ok(())
             },
             None => Err(BlockchainError::InvalidAccount(
-                "Account does not exist.".to_string()
+                format!("Account {} does not exist.", address)
             )),
         }
     }
@@ -101,21 +102,30 @@ impl AccountState {
     pub fn update_balance(&mut self, address: &str, new_balance: f64) -> Result<(), BlockchainError> {
         match self.accounts.get_mut(address) {
             Some(account) => {
+                let old_balance = account.balance;
                 account.balance = new_balance;
+                account.update_activity();
+                self.total_supply += new_balance - old_balance;
                 Ok(())
             },
             None => Err(BlockchainError::InvalidAccount(
-                "Account does not exist.".to_string()
+                format!("Account {} does not exist.", address)
             )),
         }
     }
 
-    pub fn credit() {
-        unimplemented!()
+    pub fn credit(&mut self, address: &str, amount: f64) -> Result<(), BlockchainError> {
+        let current_balance = self.get_balance(address);
+        let new_balance = current_balance + amount;
+        self.update_balance(address, new_balance)?;
+        Ok(())
     }
 
-    pub fn debit() {
-        unimplemented!()
+    pub fn debit(&mut self, address: &str, amount: f64) -> Result<(), BlockchainError> {
+        let current_balance = self.get_balance(address);
+        let new_balance = current_balance - amount;
+        self.update_balance(address, new_balance)?;
+        Ok(())
     }
 
 }

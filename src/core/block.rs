@@ -74,21 +74,24 @@ impl Block {
         Ok(block)
     }
 
-    pub fn mine(&mut self) {
+    pub fn mine(&mut self) -> Result<(), BlockchainError> {
         let target = "0".repeat(self.header.difficulty);
 
         // Assume we can find the valid hash in u32 range.
         for _ in 0..=u32::MAX {
             if self.hash.starts_with(target.as_str()) {
-                break;
+                println!("Block mined! Nonce: {}, Hash: {}", self.header.nonce, self.hash);
+                return Ok(())
             } else {
                 self.header.nonce += 1;
                 self.hash = self.calculate_hash();
             }
         }
 
-        // Print info
-        println!("Block mined! Nonce: {}, Hash: {}", self.header.nonce, self.hash);
+        // Cannot find required hash.
+        Err(BlockchainError::ValidationError(
+            "Could not find valid hash within nonce range.".to_string()
+        ))
     }
 
     pub fn calculate_hash(&self) -> String {
@@ -112,9 +115,22 @@ impl Block {
             ));
         }
 
-        // Verify tx again.
+        // Verify transactions
         for tx in &self.transactions {
-            tx.validate_basic();
+            tx.validate_basic()?;
+        }
+
+        // Verify merkle root
+        let tx_data: Vec<Vec<u8>> = self.transactions
+            .iter()
+            .map(|x| serialize(x).unwrap())
+            .collect();
+        let merkle_tree = MerkleTree::new(tx_data);
+        let merkle_root = merkle_tree.get_root().unwrap_or("0".repeat(64));
+        if self.header.merkle_root != merkle_root {
+            return Err(BlockchainError::ValidationError(
+                "Invalid merkle root.".to_string()
+            ));
         }
 
         Ok(())

@@ -74,4 +74,27 @@ impl Transaction {
 
         Ok(())
     }
+
+    pub fn validate_with_state(&self, sender_balance: f64, expected_nonce: u64)
+        -> Result<(), BlockchainError>
+    {
+        self.validate_basic()?;
+
+        if !self.is_coinbase() {
+            if sender_balance < self.calculate_cost() {
+                return Err(BlockchainError::InsufficientBalance(
+                    format!("{} does not have enough balance.", &self.sender)
+                ));
+            }
+            if self.nonce != expected_nonce {
+                return Err(BlockchainError::InvalidNonce(
+                    format!("Invalid nonce for {}", &self.sender)
+                ));
+            }
+        }
+
+        Ok(())
+    }
+
+    
 }

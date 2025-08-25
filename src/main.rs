@@ -8,6 +8,10 @@ mod network;
 mod storage;
 mod utils;
 
+use config::BlockchainConfig;
+use core::blockchain::BlockChain;
+use core::transaction::Transaction;
+
 fn main() {
     println!("hello, blockchain.");
 }
