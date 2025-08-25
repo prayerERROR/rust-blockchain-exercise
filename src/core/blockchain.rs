@@ -43,6 +43,31 @@ impl BlockChain {
         })
     }
 
+    pub fn add_block(&mut self, mut block: Block) -> Result<(), BlockchainError> {
+        // Verify transactions and update state
+        for tx in &block.transactions {
+            self.validate_transaction(tx)?;
+        }
+
+        // Mine the block and verify
+        let _ = block.mine();
+        block.verify()?;
+
+        // Process transactions
+        for tx in &block.transactions {
+            self.process_transaction(tx)?;
+        }
+
+        // Add block to chain
+        let new_index = self.blocks.len();
+        self.block_index.insert(block.hash.clone(), new_index);
+        self.blocks.push(block);
+
+        // Adjust difficulty if needed
+        self.adjust_difficulty();
+        Ok(())
+    }
+
     pub fn create_block(&mut self, txs: Vec<Transaction>, miner_address: &str) -> Result<Block, BlockchainError> {
         let pre_block = self.get_last_block().unwrap();
         let pre_hash = pre_block.hash.clone();
@@ -68,7 +93,7 @@ impl BlockChain {
         } else {
             let sender_balance = self.account_state.get_balance(&tx.sender);
             let expected_nonce = 1 + self.account_state.get_nonce(&tx.sender);
-            tx.validate_with_state(sender_balance, expected_nonce+1)?;
+            tx.validate_with_state(sender_balance, expected_nonce)?;
         }
 
         Ok(())
@@ -97,7 +122,7 @@ impl BlockChain {
 
     pub fn get_height(&self) -> u64 {
         match self.blocks.last() {
-            Some(block) => block.get_height(),
+            Some(block) => block.get_height() + 1,
             None => 0,
         }
     }

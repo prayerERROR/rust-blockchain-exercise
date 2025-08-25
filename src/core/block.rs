@@ -81,7 +81,7 @@ impl Block {
         for _ in 0..=u32::MAX {
             if self.hash.starts_with(target.as_str()) {
                 println!("Block mined! Nonce: {}, Hash: {}", self.header.nonce, self.hash);
-                return Ok(())
+                return Ok(());
             } else {
                 self.header.nonce += 1;
                 self.hash = self.calculate_hash();

@@ -88,7 +88,7 @@ impl Transaction {
             }
             if self.nonce != expected_nonce {
                 return Err(BlockchainError::InvalidNonce(
-                    format!("Invalid nonce for {}", &self.sender)
+                    format!("Invalid nonce for {}, require: {}, got {}.", &self.sender, expected_nonce, self.nonce)
                 ));
             }
         }
